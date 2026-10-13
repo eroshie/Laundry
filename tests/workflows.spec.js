@@ -8,3 +8,14 @@ test('customer tracking, invalid ID, reviews and alerts',async({page})=>{
  await page.goto('/');await page.getByRole('button',{name:'Track my laundry →'}).click();await page.getByRole('textbox',{name:'Order ID'}).fill('999999');await page.getByRole('button',{name:'Track My Laundry →',exact:true}).click();await expect(page.getByRole('status')).toContainText('Order not found');await page.getByRole('textbox',{name:'Order ID'}).fill('#088');await page.getByRole('button',{name:'Track My Laundry →',exact:true}).click();await expect(page.getByRole('heading',{name:'My Orders'})).toBeVisible();await page.getByRole('button',{name:'Pickup alerts'}).click();await expect(page.getByRole('status')).toContainText('ready for pickup');await page.getByRole('button',{name:'Review',exact:true}).click();await page.getByRole('button',{name:'4 star rating'}).click();await page.getByLabel('Your Name (optional)').fill('Browser Tester');await page.getByLabel('Your Comment').fill('Fresh clothes and easy tracking.');await page.getByRole('button',{name:'Submit Review'}).click();await expect(page.getByText('Fresh clothes and easy tracking.')).toBeVisible();await page.getByRole('button',{name:'Exit',exact:true}).click();await expect(page.getByRole('heading',{name:'Track Your Laundry'})).toBeVisible();
 });
 test('screens fit mobile and desktop widths',async({page})=>{await login(page);for(const width of [390,1280]){await page.setViewportSize({width,height:900});for(const name of ['Dashboard','Order','Customers','Reports','Reviews']){await nav(page,name);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true)}}await page.screenshot({path:'test-results/dashboard.png',fullPage:true});});
+test('standalone output works on a basic static server',async({page})=>{
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('http://127.0.0.1:4174/');
+ await expect(page.getByRole('heading',{name:'Laundry Tracking System'})).toBeVisible();
+ await expect(page.locator('.welcome-illustration')).toHaveJSProperty('naturalWidth',980);
+ await page.getByRole('button',{name:'Track my laundry →'}).click();
+ await page.getByRole('textbox',{name:'Order ID'}).fill('123');
+ await page.getByRole('button',{name:'Track My Laundry →',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'My Orders'})).toBeVisible();
+ expect(errors).toEqual([]);
+});

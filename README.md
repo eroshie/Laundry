@@ -1,30 +1,44 @@
-# Laundry Tracking System
+# Laundry Tracking System — HTML, CSS and JavaScript
 
-React web application based on the supplied 20-page Figma PDF. Includes welcome/login, staff navigation and dashboard, order queue and creation, customer search, all four laundry status detail views, notes and payment recording, pickup notification demo, staff reviews, sales reports with CSV export, customer tracking, customer orders and review submission. The exported hamburger/cloud graphics are design assets rather than separate application pages. Reports were inferred from the navigation because no report frame was provided.
+A framework-free application based on the supplied Figma PDF. No React, CDN libraries, or runtime dependencies are required.
 
-## Run
+## Open the application
 
-Requires Node.js 22 or later.
+Download the repository ZIP, extract it, and open `index.html` in a modern browser. Keep `index.html`, `style.css`, `data.js`, `app.js`, and the `assets` directory together. Alternatively, serve the directory with any static web server.
+
+For development with automatic reload (optional, Node.js 22 or later):
 
 ```sh
 npm ci --cache /tmp/laundry-npm-cache
 npm run dev -- --port 5173
 ```
 
-Production build: `npm run build`. Serve it with `npm run preview -- --port 4173`.
+## Files
 
-## Validation
+- `index.html`: page shell and stylesheet/script references.
+- `style.css`: complete responsive designs.
+- `data.js`: sample orders, reviews, status names and currency formatting.
+- `app.js`: DOM rendering, navigation, forms, search, order management, payments, notes, tracking, reviews, reports and browser storage. User-entered text is escaped before HTML rendering.
+- `assets/laundry-illustration.png`: welcome illustration extracted from the supplied design PDF.
 
-```sh
-npm test
-```
+## Features
 
-Browser tests use `/usr/bin/chromium` by default. Set `CHROMIUM_PATH` to another installed Chromium executable when needed. Tests cover adding orders, recording payment, changing status, notes, persistence, customer search, CSV downloads, tracking errors, pickup alerts, reviews and responsive screen widths.
+Welcome and demo login; staff navigation, dashboard and orders; adding laundry to the queue; customer search and status filters; Pending, Wash, Dry and Ready detail screens; status updates; cash payment recording; notes; pickup notification demo; staff reviews; calculated sales reports with CSV export; customer tracking; expandable customer orders; ratings and review submission.
+
+Reports were inferred from the navigation because the PDF did not include a report screen. Hamburger/cloud graphics in the export are assets rather than independent pages.
+
+## Build and tests (optional developer tools)
+
+`npm run build` copies the standalone site to `dist`; no compilation is needed. `npm run preview -- --port 4173` serves that directory.
+
+`npm test` runs four browser tests: staff workflow and persistence, customer tracking and reviews, mobile/desktop widths, and serving the standalone output with a basic static server. Direct file opening could not be verified here because the managed browser blocks file URLs. Tests use `/usr/bin/chromium`; set `CHROMIUM_PATH` for another installed Chromium executable.
 
 ## Demo scope
 
-Data is stored only in this browser's localStorage, under `laundry-orders` and `laundry-reviews`. Seed orders and reviews are taken from the PDF. Clearing these keys restores the seed data on reload. Demo staff login accepts any nonempty client name and password. Tracking supports known IDs, including #123, #88 and #72; Explore demo orders shows the four sample portal orders. Order IDs are not authentication and must not expose real customer data in production.
+Orders and reviews live only in the browser's localStorage (`laundry-orders` and `laundry-reviews`). Clearing these keys restores seed data on reload. File-based storage behavior may vary by browser; use a static HTTP server for consistent persistence. If storage is unavailable, changes remain for the current session.
 
-Notifications save a local flag and display a confirmation; no SMS or email is sent. Dashboard trends are illustrative and labeled as such. Order totals, payment balances, status counts and reports are calculated from stored orders. Total Spent in the customer portal follows the design's sum of order prices, including unpaid orders.
+Demo staff login accepts any nonempty client name/password. Known tracking IDs include #123, #88 and #72; Explore demo orders shows four sample orders. Order IDs do not authenticate customers.
 
-Production deployment needs a backend/database, real staff and customer authentication, access controls, SMS/email delivery, and server-side validation. No credentials are required for this local demo.
+Pickup notifications save a local flag and show a confirmation; no SMS or email is sent. Dashboard trend bars are illustrative and labeled. Order totals, payment balances, status counts and reports are calculated from stored orders. Total Spent in the customer portal follows the design's sum of order prices, including unpaid orders.
+
+Production use requires a backend/database, real authentication, customer access controls, server-side validation, and SMS/email integration. No credentials are needed for this demo.
